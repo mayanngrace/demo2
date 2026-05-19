@@ -14,6 +14,7 @@ app.use(session({
     saveUninitialized: true
 }));
 
+require("dotenv").config
 mongoose.connect("mongodb://127.0.0.1:27017/communityDB")
     .then(() => console.log("✅ MongoDB Connected"))
     .catch(err => console.log("❌ MongoDB error:", err));
