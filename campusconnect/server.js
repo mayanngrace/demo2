@@ -8,10 +8,21 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
+// app.use(session({
+//     secret: "secret123",
+//     resave: false,
+//     saveUninitialized: true
+// }));
+
+app.set("trust proxy", 1);
+
 app.use(session({
-    secret: "secret123",
+    secret: "campus_secret_123",
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false,
+    cookie: {
+        secure: true
+    }
 }));
 
 require("dotenv").config
