@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — CampusConnect</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --maroon: #7b1113;
+      --maroon-dark: #5a0c0e;
+      --maroon-deep: #3d0608;
+      --maroon-mid: #9e1517;
+      --maroon-light: #f5eaea;
+      --gold: #f5a623;
+      --gold-light: #fff8ed;
+      --cream: #fdf8f2;
+      --white: #ffffff;
+      --bg: #f4f0f0;
+      --text: #1a0a0b;
+      --muted: #8a7070;
+      --border: #ecdede;
+      --sidebar-w: 72px;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: linear-gradient(180deg, var(--maroon-deep) 0%, var(--maroon-dark) 60%, var(--maroon) 100%);
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.25rem 0;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      width: 42px; height: 42px;
+      background: var(--gold);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: var(--maroon-deep);
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(245,166,35,0.4);
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      width: 100%;
+      padding: 0 0.6rem;
+    }
+
+    .nav-item {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 0;
+      border-radius: 12px;
+      cursor: pointer;
+      color: rgba(255,255,255,0.45);
+      font-size: 1.2rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .nav-item:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
+
+    .nav-item.active {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+    }
+
+    /* Active tab pill on left */
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: -0.6rem;
+      top: 50%; transform: translateY(-50%);
+      width: 4px; height: 28px;
+      background: var(--gold);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .nav-item span {
+      font-size: 0.52rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    .sidebar-bottom {
+      padding: 0 0.6rem;
+      width: 100%;
+    }
+
+    .logout-icon {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-radius: 12px;
+      color: rgba(255,255,255,0.35);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .logout-icon span { font-size: 0.52rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.2rem; }
+    .logout-icon:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); }
+
+    /* ── MAIN ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 1.5rem;
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-box {
+      flex: 1;
+      max-width: 380px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 0.65rem 1rem 0.65rem 2.5rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.875rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus { border-color: var(--maroon); }
+    .search-box input::placeholder { color: #c0b0b0; }
+
+    .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%; transform: translateY(-50%);
+      color: #c0b0b0;
+      font-size: 0.9rem;
+    }
+
+    .topbar-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .icon-btn {
+      width: 40px; height: 40px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.15s;
+      color: var(--muted);
+    }
+
+    .icon-btn:hover { border-color: var(--maroon); color: var(--maroon); }
+
+    .avatar-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0.4rem 0.75rem 0.4rem 0.4rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .avatar-btn:hover { border-color: var(--maroon); }
+
+    .avatar-circle {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--maroon-mid), var(--maroon-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .avatar-name { font-size: 0.82rem; font-weight: 600; }
+    .avatar-caret { color: var(--muted); font-size: 0.7rem; }
+    .role-chip { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.18rem 0.5rem; border-radius: 20px; }
+    .role-chip.student { background: var(--maroon-light); color: var(--maroon); }
+    .role-chip.admin { background: #edf5f0; color: #2a6b4a; }
+
+    /* ── WELCOME BANNER ── */
+    .welcome-banner {
+      background: linear-gradient(135deg, #fff8ed 0%, #fef3e0 100%);
+      border: 1.5px solid #f5dfa0;
+      border-radius: 20px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .welcome-text { flex: 1; }
+
+    .welcome-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--maroon-deep);
+      margin-bottom: 0.3rem;
+    }
+
+    .welcome-text p { color: var(--muted); font-size: 0.85rem; }
+
+    .welcome-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      text-align: right;
+    }
+
+    .meta-item { font-size: 0.8rem; color: var(--muted); }
+    .meta-item strong { color: var(--maroon); font-weight: 600; }
+
+    .welcome-illustration {
+      font-size: 3.5rem;
+      line-height: 1;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+    }
+
+    /* ── GRID LAYOUT ── */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 1.25rem;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-label a {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--maroon);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    /* ── MODULE CARDS (dashboard links) ── */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .module-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .module-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--maroon-mid), var(--gold));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.2s;
+    }
+
+    .module-card:hover { border-color: var(--maroon); box-shadow: 0 8px 24px rgba(123,17,19,0.12); transform: translateY(-2px); }
+    .module-card:hover::after { transform: scaleX(1); }
+
+    .module-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .icon-maroon { background: var(--maroon-light); }
+    .icon-gold { background: var(--gold-light); }
+    .icon-green { background: #edf5f0; }
+    .icon-blue { background: #edf2fb; }
+
+    .module-title { font-weight: 700; font-size: 0.9rem; }
+    .module-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+
+    /* ── POSTS PREVIEW ── */
+    .posts-preview {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem;
+    }
+
+    .post-preview-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .post-preview-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .post-preview-item:first-child { padding-top: 0; }
+
+    .post-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-task { background: #f5a623; }
+    .dot-service { background: #2a6b4a; }
+    .dot-selling { background: #2563a8; }
+
+    .post-preview-title { flex: 1; font-size: 0.85rem; font-weight: 500; }
+    .post-preview-tag { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+
+    /* ── RIGHT COLUMN ── */
+    .stat-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-number.maroon { color: var(--maroon); }
+    .stat-number.gold { color: var(--gold); }
+    .stat-number.green { color: #2a6b4a; }
+    .stat-number.blue { color: #2563a8; }
+    .stat-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+
+    /* Quick info card */
+    .info-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+    }
+
+    .info-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .info-row:first-child { padding-top: 0; }
+    .info-row span { color: var(--muted); }
+    .info-row strong { font-weight: 600; }
+
+    /* Schedule card */
+    .schedule-card {
+      background: linear-gradient(135deg, var(--maroon-deep), var(--maroon));
+      border-radius: 16px;
+      padding: 1.25rem;
+    }
+
+    .schedule-title { font-size: 0.82rem; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+
+    .schedule-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .schedule-item:last-child { border-bottom: none; }
+
+    .schedule-time { font-size: 0.72rem; color: rgba(255,255,255,0.45); width: 60px; flex-shrink: 0; }
+    .schedule-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+    .schedule-subject { font-size: 0.82rem; color: rgba(255,255,255,0.9); font-weight: 500; }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">CC</div>
+    <nav class="sidebar-nav">
+      <a href="/" class="nav-item active">
+        🏠<span>Home</span>
+      </a>
+      <a href="/community" class="nav-item">
+        💬<span>Posts</span>
+      </a>
+      <a href="/courses" class="nav-item hide-for-admin">
+        📚<span>Courses</span>
+      </a>
+      <a href="/student" class="nav-item hide-for-admin">
+        👤<span>Profile</span>
+      </a>
+      <a href="/about" class="nav-item">
+        ℹ️<span>About</span>
+      </a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="/logout" class="logout-icon">
+        🚪<span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search anything...">
+      </div>
+      <div class="topbar-right">
+        <div class="icon-btn">🔔</div>
+        <div class="icon-btn">⚙️</div>
+        <div class="avatar-btn">
+          <div class="avatar-circle" id="avatarInitial">S</div>
+          <span class="avatar-name" id="avatarName">Student</span>
+          <span class="role-chip student" id="roleBadge">Student</span>
+          <span class="avatar-caret">▾</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- WELCOME BANNER -->
+    <div class="welcome-banner">
+      <div class="welcome-illustration">🎓</div>
+      <div class="welcome-text">
+        <h2 id="welcomeMsg">Hello, Iskolar ng Bayan! 👋</h2>
+        <p id="welcomeSub">Welcome to CampusConnect. Browse the community, check your courses, and manage your profile.</p>
+      </div>
+    </div>
+
+    <!-- CONTENT GRID -->
+    <div class="content-grid">
+
+      <!-- LEFT -->
+      <div>
+
+        <div class="modules-grid">
+          <a href="/community" class="module-card">
+            <div class="module-icon icon-maroon">💬</div>
+            <div class="module-title">Community Board</div>
+            <div class="module-desc">Browse, search and filter student posts</div>
+          </a>
+          <a href="/courses" class="module-card hide-for-admin">
+            <div class="module-icon icon-gold">📚</div>
+            <div class="module-title">My Courses</div>
+            <div class="module-desc">View your enrolled subjects & grades</div>
+          </a>
+          <a href="/student" class="module-card hide-for-admin">
+            <div class="module-icon icon-green">👤</div>
+            <div class="module-title">Student Profile</div>
+            <div class="module-desc">View your academic information</div>
+          </a>
+          <a href="/about" class="module-card">
+            <div class="module-icon icon-blue">ℹ️</div>
+            <div class="module-title">About</div>
+            <div class="module-desc">Learn more about CampusConnect</div>
+          </a>
+        </div>
+
+        <div class="section-label">
+          Recent Community Posts
+          <a href="/community">See more →</a>
+        </div>
+
+        <div class="posts-preview" id="postsPreview">
+          <div class="post-preview-item">
+            <div class="post-dot dot-task"></div>
+            <div class="post-preview-title">Loading posts...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div>
+        <div class="section-label student-only">At a Glance</div>
+
+        <div class="stat-cards student-only">
+          <div class="stat-card">
+            <div class="stat-number maroon">5</div>
+            <div class="stat-label">Subjects</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number gold">15</div>
+            <div class="stat-label">Units</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number green">1.85</div>
+            <div class="stat-label">GWA</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number blue" id="postCount">—</div>
+            <div class="stat-label">Posts</div>
+          </div>
+        </div>
+
+        <div class="section-label student-only">Student Info</div>
+
+        <div class="info-card student-only">
+          <div class="info-row"><span>Name</span><strong>Juan dela Cruz</strong></div>
+          <div class="info-row"><span>Student ID</span><strong>2024-01234</strong></div>
+          <div class="info-row"><span>Program</span><strong>BSCS</strong></div>
+          <div class="info-row"><span>Year</span><strong>2nd Year</strong></div>
+          <div class="info-row"><span>Email</span><strong style="font-size:0.78rem">jdelacruz@up.edu.ph</strong></div>
+        </div>
+
+        <div class="schedule-card student-only">
+          <div class="schedule-title">📅 Today's Schedule</div>
+          <div class="schedule-item">
+            <div class="schedule-time">08:00 AM</div>
+            <div class="schedule-dot"></div>
+            <div class="schedule-subject">STAT 121</div>
+          </div>
+          <div class="schedule-item">
+            <div class="schedule-time">10:00 AM</div>
+            <div class="schedule-dot"></div>
+            <div class="schedule-subject">CMSC 124</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // Session + role
+    fetch("/session-info").then(r => r.json()).then(d => {
+      const badge = document.getElementById("roleBadge");
+      const name = document.getElementById("avatarName");
+      const initial = document.getElementById("avatarInitial");
+      const sub = document.getElementById("welcomeSub");
+
+      badge.textContent = d.role;
+      badge.className = "role-chip " + d.role;
+
+      if (d.role === "admin") {
+        name.textContent = "Admin";
+        initial.textContent = "A";
+        document.getElementById("welcomeMsg").textContent = "Hello, Administrator! 🔑";
+        sub.textContent = "You have admin access. You can view, filter, search, and delete all student posts.";
+        // Hide student-only nav links
+        document.querySelectorAll(".hide-for-admin").forEach(el => el.style.display = "none");
+        document.querySelectorAll(".student-only").forEach(el => el.style.display = "none");
+      }
+    }).catch(() => {});
+
+    // Load recent posts
+    fetch("/posts").then(r => r.json()).then(posts => {
+      document.getElementById("postCount").textContent = posts.length;
+      const preview = document.getElementById("postsPreview");
+
+      if (posts.length === 0) {
+        preview.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--muted);font-size:0.85rem;">No posts yet. Be the first to post!</div>';
+        return;
+      }
+
+      const dotClass = { Task: 'dot-task', Service: 'dot-service', Selling: 'dot-selling' };
+      const recent = posts.slice(-5).reverse();
+
+      preview.innerHTML = recent.map(p => `
+        <div class="post-preview-item">
+          <div class="post-dot ${dotClass[p.category] || 'dot-task'}"></div>
+          <div class="post-preview-title">${p.title}</div>
+          <div class="post-preview-tag">${p.category}</div>
+        </div>
+      `).join('');
+    }).catch(() => {
+      document.getElementById("postCount").textContent = "—";
+    });
+  </script>
+
+</body>
+</html>

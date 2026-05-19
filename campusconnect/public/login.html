@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — CampusConnect UP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --maroon: #7b1113;
+      --maroon-dark: #5a0c0e;
+      --maroon-deep: #3d0608;
+      --maroon-mid: #9e1517;
+      --gold: #f5a623;
+      --gold-light: #fdd07a;
+      --cream: #fdf8f2;
+      --white: #ffffff;
+      --text: #1a0a0b;
+      --muted: #8a7070;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .login-wrapper {
+      width: 100%;
+      max-width: 880px;
+      background: var(--white);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(123,17,19,0.18), 0 8px 24px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 560px;
+    }
+
+    /* ── LEFT PANEL ── */
+    .left-panel {
+      position: relative;
+      background: var(--maroon-deep);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 2.5rem;
+    }
+
+    /* Animated blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(0px);
+      opacity: 0.85;
+    }
+
+    .blob-1 {
+      width: 280px; height: 280px;
+      background: radial-gradient(circle at 40% 40%, #b01a1c, #7b1113);
+      top: -60px; left: -60px;
+      animation: float1 8s ease-in-out infinite;
+    }
+
+    .blob-2 {
+      width: 200px; height: 200px;
+      background: radial-gradient(circle at 60% 30%, #9e1517, #5a0c0e);
+      top: 80px; right: -30px;
+      animation: float2 10s ease-in-out infinite;
+    }
+
+    .blob-3 {
+      width: 160px; height: 160px;
+      background: radial-gradient(circle at 50% 50%, #c41e20, #8a1012);
+      bottom: 120px; left: 30px;
+      animation: float3 7s ease-in-out infinite;
+    }
+
+    .blob-4 {
+      width: 240px; height: 240px;
+      background: radial-gradient(circle at 30% 70%, #6b0e10, #4a0809);
+      bottom: -80px; right: -40px;
+      animation: float1 9s ease-in-out infinite reverse;
+    }
+
+    /* Wave shape at bottom */
+    .wave {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 120px;
+      background: var(--white);
+      border-radius: 60% 60% 0 0 / 100% 100% 0 0;
+      opacity: 0.06;
+    }
+
+    /* Decorative circles */
+    .deco-circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.12);
+    }
+
+    .deco-circle-1 { width: 80px; height: 80px; top: 160px; left: 50px; animation: spin 20s linear infinite; }
+    .deco-circle-2 { width: 50px; height: 50px; bottom: 180px; right: 60px; animation: spin 15s linear infinite reverse; }
+    .deco-circle-3 { width: 36px; height: 36px; top: 240px; right: 80px;
+      background: rgba(245,166,35,0.25);
+      border-color: rgba(245,166,35,0.4);
+      animation: float2 6s ease-in-out infinite;
+    }
+
+    @keyframes float1 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(12px,16px) scale(1.04)} }
+    @keyframes float2 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-10px,12px) scale(1.06)} }
+    @keyframes float3 { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(8px,-10px) scale(0.96)} }
+    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+    .left-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .left-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .up-seal {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: var(--maroon-deep);
+      letter-spacing: 0.01em;
+      flex-shrink: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .left-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--white);
+      line-height: 1.1;
+    }
+
+    .left-brand small {
+      display: block;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 0.15rem;
+    }
+
+    .left-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.1rem;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 0.6rem;
+    }
+
+    .left-sub {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.04em;
+    }
+
+    .left-url {
+      margin-top: 1.5rem;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.28);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ── RIGHT PANEL ── */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 2.5rem;
+      background: var(--white);
+    }
+
+    .greet-time {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .greet-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    .login-cta {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .login-cta span { color: var(--maroon); font-weight: 600; }
+
+    .field-wrap { margin-bottom: 1.25rem; }
+
+    .field-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+
+    .field-input {
+      width: 100%;
+      border: none;
+      border-bottom: 2px solid #e8ddd0;
+      padding: 0.65rem 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.925rem;
+      color: var(--text);
+      background: transparent;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .field-input::placeholder { color: #c8bbb0; }
+    .field-input:focus { border-color: var(--maroon); }
+
+    .field-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.75rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .remember { display: flex; align-items: center; gap: 0.4rem; cursor: pointer; }
+    .remember input { accent-color: var(--maroon); }
+    .forgot { color: var(--maroon); font-weight: 600; cursor: pointer; }
+    .forgot:hover { text-decoration: underline; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, var(--maroon-mid), var(--maroon-dark));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 6px 20px rgba(123,17,19,0.35);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(123,17,19,0.45);
+      background: linear-gradient(135deg, var(--maroon), var(--maroon-deep));
+    }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    .create-link {
+      text-align: center;
+      margin-top: 1.25rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .create-link a { color: var(--maroon); font-weight: 600; text-decoration: none; }
+    .create-link a:hover { text-decoration: underline; }
+
+    .alert-error {
+      background: #fdecea;
+      border-left: 3px solid var(--maroon);
+      color: var(--maroon);
+      padding: 0.6rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    /* Demo hints */
+    .demo-hints {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid #f0e8e0;
+    }
+
+    .demo-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #c8bbb0;
+      margin-bottom: 0.6rem;
+    }
+
+    .demo-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .demo-chip {
+      flex: 1;
+      background: #fdf5f0;
+      border: 1px solid #f0e0d8;
+      border-radius: 8px;
+      padding: 0.5rem 0.65rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .demo-chip:hover { background: var(--maroon); color: white; border-color: var(--maroon); }
+    .demo-chip strong { display: block; font-weight: 700; color: var(--maroon); margin-bottom: 0.1rem; }
+    .demo-chip:hover strong { color: rgba(255,255,255,0.8); }
+    .demo-chip span { color: var(--muted); }
+    .demo-chip:hover span { color: rgba(255,255,255,0.7); }
+
+    @media (max-width: 600px) {
+      .login-wrapper { grid-template-columns: 1fr; border-radius: 20px; }
+      .left-panel { display: none; }
+      .right-panel { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+
+    <!-- LEFT -->
+    <div class="left-panel">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+      <div class="blob blob-4"></div>
+      <div class="wave"></div>
+      <div class="deco-circle deco-circle-1"></div>
+      <div class="deco-circle deco-circle-2"></div>
+      <div class="deco-circle deco-circle-3"></div>
+
+      <div class="left-content">
+        <div class="left-heading">CampusConnect</div>
+        <div class="left-sub">Welcome Page</div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right-panel">
+      <div class="greet-main">Login Your Account</div>
+      
+      <div class="alert-error" id="errorAlert">Invalid username or password.</div>
+
+      <div class="field-wrap">
+        <label class="field-label">Username</label>
+        <input class="field-input" type="text" id="username" placeholder="Enter your username">
+      </div>
+
+      <div class="field-wrap">
+        <label class="field-label">Password</label>
+        <input class="field-input" type="password" id="password" placeholder="••••••••">
+      </div>
+
+      <div class="field-row">
+        <label class="remember">
+          <input type="checkbox"> Remember me
+        </label>
+        <span class="forgot">Forgot Password?</span>
+      </div>
+
+      <button class="btn-submit" onclick="login()">Submit</button>
+      <div class="create-link"><a href="#">Create Account</a></div>
+
+      <div class="demo-hints">
+        <div class="demo-label">Demo Credentials</div>
+        <div class="demo-row">
+          <div class="demo-chip" onclick="fillCreds('student','123')">
+            <strong>Student</strong>
+            <span>student / 123</span>
+          </div>
+          <div class="demo-chip" onclick="fillCreds('admin','123')">
+            <strong>Admin</strong>
+            <span>admin / 123</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/js/login.js"></script>
+  <script>
+    // Set greeting by time
+    const h = new Date().getHours();
+    document.getElementById('greetTime').textContent =
+      h < 12 ? 'Good Morning' : h < 17 ? 'Good Afternoon' : 'Good Evening';
+
+    function fillCreds(u, p) {
+      document.getElementById('username').value = u;
+      document.getElementById('password').value = p;
+    }
+  </script>
+</body>
+</html>
